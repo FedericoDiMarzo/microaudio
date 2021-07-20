@@ -1,0 +1,34 @@
+# Exclude temporary files
+*.elf
+*.bin
+*.hex
+*.map
+*.exe
+*.o
+*.a
+*.d
+*.out
+*.app
+*.slo
+*.lo
+*.obj
+*.gch
+*.pch
+*.so
+*.dylib
+*.dll
+*.mod
+*.smod
+*.lai
+*.la
+*.lib
+
+# Exclude Mac OS X temporary
+._*
+.DS_Store
+
+# Exclude IDE files
+.idea
+
+# Exclude build folder
+build
