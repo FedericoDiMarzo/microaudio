@@ -3,7 +3,7 @@
 #ifndef STM32_MONOSYNTH_AUDIO_MODULE_H
 #define STM32_MONOSYNTH_AUDIO_MODULE_H
 
-#include "audio.h"
+#include "audio_driver.h"
 #include "audio_buffer.h"
 #include "audio_processor.h"
 

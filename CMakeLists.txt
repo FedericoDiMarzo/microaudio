@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS " -Wa,-mbig-obj")
 
 add_library(${PROJECT_NAME}
-        include/audio.h
+        include/audio_driver.h
         include/audio_buffer.h
         include/audio_config.h
         include/audio_math.h
