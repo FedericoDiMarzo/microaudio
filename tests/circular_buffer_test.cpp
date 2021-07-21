@@ -1,5 +1,5 @@
 #include "catch.hpp"
-#include "../src/circular_buffer.h"
+#include "../include/circular_buffer.h"
 
 TEST_CASE("CircularBuffer", "[containers]") {
 
