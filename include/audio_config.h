@@ -22,10 +22,5 @@
  */
 #define AUDIO_DRIVER_BIT_DEPTH 16
 
-/**
- * Max value for DAC conversion ((2 ^ (BIT_DEPTH-1)) - 1).
- * Positive integer upper bound of the DAC values.
- */
-#define DAC_MAX_POSITIVE_VALUE 32767
 
 #endif //MIOSIX_AUDIO_AUDIO_CONFIG_H
