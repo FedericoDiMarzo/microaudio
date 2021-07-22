@@ -6,12 +6,15 @@
 #include "audio_processable.h"
 #include "audio_buffer.h"
 
+// TODO: make the output buffer working with a custom type (int, double, float...)
 
 /**
  * This singleton class offers an interface to the low level audio
  * functionalities of the system.
  * It allows to set an AudioProcessable object to be called as a callback
  * to handle the audio processing.
+ *
+ * Inherit from this class to implement the actual driver for your system.
  */
 class AudioDriver {
 public:
