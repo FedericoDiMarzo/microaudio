@@ -42,10 +42,10 @@ int* writePointer = buffer.getWritePointer(0);
 
 // writing into the buffer
 for (int i = 0; i < buffer.getBufferLength(); i++) {
-	writePointer[i] = i;
+    writePointer[i] = i;
 }
 
-// this array is read only
+// this pointer is read only
 const int* readPointer = buffer.getReadPointer(0);
 ```
 
@@ -71,7 +71,8 @@ The abstract class that implements the actual audio application is called ```Aud
 During execution, the ```AudioDriver``` will call the ```process()``` method of the ```AudioProcessor```, where the processor will process the ```AudioBuffer``` contained in the driver. After the processing, the driver will need to redirect the output buffer, using the DAC, or any output device used in the development environment.
 
 ## Driver Configuration
-In order to configure microaudio with your embedded environment, you need to implement the abstract class ```AudioDriver```. This section proposes some guidelines to follow to successfully complete the implementation.
+In order to configure microaudio with your embedded environment, you need to inherit class ```AudioDriver``` and implement its methods. This section proposes some guidelines to follow to successfully complete the implementation.
+Currently, microaudio is structured to work with float buffers as far as the audio engine is concerned, but other types will be supported in a future update.
 
 Before implementing the driver, it is necessary to modify the configuration header ```audio_config.h```.
 
@@ -93,5 +94,62 @@ It must be implemented as a blocking method, containing an infinite loop which, 
 
 Given the demand for real time, it is recommended to use a DMA peripheral instead of an interrupts logic where available, since in this way it will be possible to make a better use of the cpu for audio processing, rather than using it for moving the buffer content into the output peripheral.
 
+## Developing an audio application
+After configuring the ```AudioDriver```, it will finally be possible to develop the audio application exploiting the full potential of the framework.
+
+To better understand how to configure the code template needed to develop new software, you need to familiarize yourself with one last class.
+
+### Audio Module
+To facilitate the reuse and interconnection of processing blocks, you can use the ```AudioModule``` class. These modules can be defined to work with one or more channels, and by design, they fit the buffer length specified when configuring the audio driver.
+
+To implement a custom audio module, you need create a new class inheriting from ```AudioModule```
+
+```c++
+#include “audio_processor.h”
+#include “audio_module.h”
+
+// a stereo audio module that does nothing
+class DummyModule: public AudioModule<2> {
+public:
+    // passing the audio processor as parameter of the class and of the superclass
+    DummyModule(AudioProcessor &audioProcessor) : AudioModule<2>(audioProcessor) {};
+    
+    // this method can be used to process the audio buffer passed as parameter in input
+    void process(AudioBuffer<float, 2, AUDIO_DRIVER_BUFFER_SIZE> &buffer) override {};
+
+}
+```
+
+Audio modules can work together in series, processing a single buffer multiple times, or in parallel, using two or more buffers and adding them together after the processing.
+
+```c++
+#include "audio_buffer.h"
+
+// your custom modules
+#include "my_modules/saw_oscillator.h"
+#include "my_modules/square_oscillator.h"
+#include "my_modules/envelope.h"
+#include "my_modules/delay.h"
+
+
+// chaining example inside your processor, containing all the modules
+void CustomProcessor::test_chain() {
+    AudioBuffer<float, 1, AUDIO_DRIVER_BUFFER_SIZE> buffer1;
+    AudioBuffer<float, 1, AUDIO_DRIVER_BUFFER_SIZE> buffer2;
+    
+    // series connection
+    this.sawOscillator.process(buffer1);
+    this.envelope.process(buffer1);
+    
+    // another series connection
+    this.squareOscillator.process(buffer2);
+    this.envelope.process(buffer2);
+
+    // merging the parallel of the two series connections into the first buffer
+    buffer1.add(buffer2);
+    
+    // adding another module after the merge
+    this.delay.process(buffer1);    
+}
 
 
