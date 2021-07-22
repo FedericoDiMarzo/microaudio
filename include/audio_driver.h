@@ -2,7 +2,6 @@
 #ifndef MIOSIX_AUDIO_DRIVER_AUDIO_H
 #define MIOSIX_AUDIO_DRIVER_AUDIO_H
 
-#include "miosix.h"
 #include "audio_config.h"
 #include "audio_processable.h"
 #include "audio_buffer.h"
@@ -20,19 +19,19 @@ public:
     /**
      * Constructor.
      */
-    AudioDriver();
+    AudioDriver() {};
 
     /**
      * Initializes the audio driver.
      */
-    void init();
+    void init() {};
 
     /**
      * Blocking call that starts the audio driver and
      * begins the audio processing.
      * In normal execution cases it never returns.
      */
-    void start();
+    void start() {};
 
     /**
      * Getter for audioProcessable.
@@ -80,7 +79,7 @@ public:
      *
      * @param newVolume new volume value between 0 and 1
      */
-    void setVolume(float newVolume);
+    void setVolume(float newVolume) {};
 
     /**
      * Getter for the volume of the DAC.
@@ -92,7 +91,7 @@ public:
     /**
      * Destructor.
      */
-    ~AudioDriver();
+    ~AudioDriver() {};
 
     /**
      * The copy constructor is disabled.
@@ -134,15 +133,17 @@ private:
      */
     float volume;
 
+protected:
+
     /**
      * Setup of the sample rate from SampleRate enum class
      */
-    void setSampleRate(uint32_t sampleRate);
+    void setSampleRate(uint32_t newSampleRate) {};
 
     /**
      * Utility method to copy current float buffers to the DAC integer output buffer
      */
-    void writeToOutputBuffer(int16_t *writableRawBuffer);
+    void writeToOutputBuffer(int16_t *writableRawBuffer) {};
 
 };
 
