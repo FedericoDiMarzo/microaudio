@@ -1,3 +1,11 @@
 #define CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_FAST_COMPILE
 #include "catch.hpp"
+#include "../include/audio_buffer.h"
+#include "../include/audio_config.h"
+#include "../include/audio_math.h"
+#include "../include/audio_module.h"
+#include "../include/audio_parameter.h"
+#include "../include/audio_processable.h"
+#include "../include/audio_processor.h"
+#include "../include/circular_buffer.h"
