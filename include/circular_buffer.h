@@ -23,8 +23,6 @@ namespace CircularBufferType
 
 
 
-
-
 /**
  * Iterator used by CircularBuffer
  * @tparam CircularBuffer

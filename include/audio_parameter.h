@@ -47,6 +47,13 @@ public:
      */
     inline T getLastValue() const { return lastValue; };
 
+    /**
+     * Gets the interpolation between the lastValue and the currentValue
+     * scaled by the transitionIndex.
+     *
+     * @return interpolated value
+     */
+     // TODO: interpolation works just for float values
     inline T getInterpolatedValue() const {
         return AudioMath::linearInterpolation(lastValue, currentValue, getTransitionIndex());
     };

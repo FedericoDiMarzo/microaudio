@@ -16,6 +16,7 @@ namespace AudioMath {
      * @param mix interpolation index between 0 and 1
      * @return linear interpolation between a and b based on mix
      */
+     // TODO: make a template function to interpolate double and int
     inline float linearInterpolation(float a, float b, float mix) {
         return (a * (1.0f - mix)) + (b * mix);
     };
