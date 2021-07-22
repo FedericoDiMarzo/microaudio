@@ -11,8 +11,8 @@ add_library(${PROJECT_NAME}
         include/audio_math.h
         include/audio_module.h
         include/audio_parameter.h
-        include/audio_processable.h
         include/audio_processor.h
+        include/audio_processable.h
         include/circular_buffer.h)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)

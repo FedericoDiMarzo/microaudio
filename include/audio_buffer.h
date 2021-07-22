@@ -1,6 +1,7 @@
 
 #ifndef MIOSIX_AUDIO_AUDIO_BUFFER_H
 #define MIOSIX_AUDIO_AUDIO_BUFFER_H
+// TODO: change all the guards names
 
 #include <array>
 #include <algorithm>
