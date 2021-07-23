@@ -338,5 +338,31 @@ LookupTableEdges::PERIODIC;
 
 ```
 
+### Other AudioMath utilities
+The AudioMath namespace also exposes some useful functions for dealing with float numbers.
+
+```c++
+#include "audio_math.h"
+
+void test_audio_math() {
+    // clipping the input
+    AudioMath::clip(1.1f, -1.0f, 1.0f); // 1.0f
+    
+    // linear interpolation 
+    AudioMath::linearInterpolation(0.0f, 30,0f, 0.5f); // 15.0f
+    
+    // linear mapping
+    AudioMath::linearMapping(0.5f, 0.0f, 0.1f, -1.0f, 1.0f); // 0.0f
+}
+```
+
+## Other resources
+The complete microaudio documentation is automatically generated with Doxygen, and is available in an html format inside the *documentation* folder of the repository
+
+## Projects made with microaudio
+
+- [**stm32-monosynth**](https://github.com/FedericoDiMarzo/stm32-monosynth):
+A monophonic synthesizer developed in C++ for the Stm32f407vg discovery board, running on top of the Miosix Audio framework. It consists of a saw oscillator based on the differentiated parabolic waveform method (DPW), and a four pole low pass ladder filter consisting of a zero delay feedback design.
+
 
 
