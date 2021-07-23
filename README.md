@@ -73,7 +73,7 @@ The abstract class that implements the actual audio application is called **Audi
 During execution, the **AudioDriver** will call the ```process``` method of the **AudioProcessor**, where the processor will process the **AudioBuffer** contained in the driver. After the processing, the driver will need to redirect the output buffer, using the DAC, or any output device used in the development environment.
 
 ## Driver Configuration
-In order to configure microaudio with your embedded environment, you need to inherit class **AudioDriver** and implement its methods. This section proposes some guidelines to follow to successfully complete the implementation.
+In order to configure microaudio with your embedded environment, you need to inherit from the class **AudioDriver** and implement its methods. This section proposes some guidelines to follow to successfully complete the implementation.
 Currently, microaudio is structured to work with float buffers as far as the audio engine is concerned, but other types will be supported in a future update.
 
 Before implementing the driver, it is necessary to modify the configuration header *audio_config.h*.
@@ -263,7 +263,7 @@ void test_circular_buffer() {
 
 The interface of the class is the same of ```std::queue```.
 
-### AudioParameter
+### Audio Parameter
 In a real time audio application, it is often necessary to take special care in parameter variation. The threads involved in the variation of the parameters, normally run with a lower frequency than the audio driver, the sudden variation of one of these parameters generates artifacts that are often audible and that reduce the general perceived quality of the software.
 
 To solve the problem, you can make use of the **AudioParameter** template class. Using this class, it is possible to define a minimum transition time for each parameter, obtaining a smooth transition in its variation.
@@ -276,7 +276,7 @@ To solve the problem, you can make use of the **AudioParameter** template class.
 // ...
 
 // inside the CustomProcessor constructor ...
-    volume.setTransitionTime(0.02, getSampleRate); // 2ms of transition time
+    volume.setTransitionTime(0.02f, getSampleRate); // 2ms of transition time
 // ...
 
 ```
@@ -297,7 +297,46 @@ void CustomProcessor::process() {
 }
 ```
 
+### Lookup Table
+The microaudio framework defines an **AudioMath** namespace inside *audio_math.h*, which contains some dsp utilities. One of these is the **LookupTable** class; it allows to generate a looktable starting from an input function, in order to avoid, during the execution in an audio thread, the call to mathematical functions, often too expensive to be used in embedded configurations.
 
+```c++
+#include "audio_math.h"
+#define LUT_RESOLUTION 256 // the actual length of the array containing the function
+
+#define LOG20 2.995732273553991f
+#define LOG20000 9.903487552536127f
+
+// a sine LUT containing one period of the function
+AudioMath::LookupTable<LUT_TABLE_RESOLUTION> AudioMath::sineLut([](float x) { return std::sin(x); },
+                                          0.0f, 2.0f * M_PI,
+                                          LookupTableEdges::PERIODIC);
+
+// a ramp LUT ranging from 0 to 1 that is also periodic
+AudioMath::LookupTable<LUT_TABLE_RESOLUTION> AudioMath::rampLut([](float x) { return x; },
+                                          0.0f, 1.0f,
+                                          LookupTableEdges::PERIODIC);
+
+// an exponential LUT ranging through the audible frequency spectrum, it extends at its ends
+AudioMath::LookupTable<LUT_TABLE_RESOLUTION> AudioMath::expLut([](float x) { return std::exp(x); },
+                                         LOG20, 20000,
+                                         LookupTableEdges::EXTENDED);
+```
+
+Lookup tables can define three different behaviors outside the range indicated during construction.
+
+```c++
+// The LUT returns 0.0 outside the extremes.
+LookupTableEdges::ZEROED;
+
+// The extremes of the LUT are returned for input
+// values outside the range.
+LookupTableEdges::EXTENDED;
+
+// The LUT repeates periodically in its range.
+LookupTableEdges::PERIODIC;
+
+```
 
 
 
